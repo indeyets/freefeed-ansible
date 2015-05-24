@@ -171,6 +171,9 @@
     - pepyatka
     - nginx
 
+- include: pepyatka-lite.yml
+  when: pepyatka_lite_enabled
+
 - name: Add nginx apt repository
   apt_repository: repo='ppa:nginx/stable' state=present
   tags:
@@ -228,6 +231,12 @@
 
 - name: Deploy nginx config
   template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  tags:
+    - pepyatka
+    - nginx
+
+- name: Deploy nginx common config
+  template: src=pepyatka-common.conf.j2 dest=/etc/nginx/pepyatka-common.conf
   tags:
     - pepyatka
     - nginx

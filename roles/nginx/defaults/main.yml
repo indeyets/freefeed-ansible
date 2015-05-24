@@ -13,3 +13,5 @@ pepyatka_files_dir: /var/pepyatka-files
 nginx_client_max_body_size: '10M'
 nginx_use_proxy_protocol: False
 pepyatka_ga_account: "UA-XXXXXX"
+pepyatka_lite_enabled: False
+

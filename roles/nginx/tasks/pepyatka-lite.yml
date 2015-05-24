@@ -1,0 +1,35 @@
+---
+
+- name: Deploy pepyatka-lite
+  git:
+    repo: "{{ pepyatka_lite_repo }}"
+    update: yes
+    dest: /var/www/pepyatka-lite
+    version: "{{ pepyatka_lite_branch }}"
+    force: yes
+  tags:
+    - pepyatka
+    - nginx
+
+- name: Deploy pepyatka-lite config
+  template: src=pepyatka-lite-config.json.j2 dest=/var/www/pepyatka-lite/config.json
+  tags:
+    - pepyatka
+    - nginx
+
+- name: Sync standard images from pepyatka-html
+  command: rsync -a --delete /var/www/pepyatka-html/public/img /var/www/pepyatka-lite
+  tags:
+    - pepyatka
+    - nginx
+
+- name: Fix pepyatka-lite permissions
+  file:
+    path: /var/www/pepyatka-lite
+    owner: "{{ www_user }}"
+    group: "{{ www_group }}"
+    state: directory
+    recurse: yes
+  tags:
+    - pepyatka
+    - nginx
