@@ -68,7 +68,7 @@ http {
     }
 {% if pepyatka_lite_enabled %}
     server {
-      server_name m.{{ pepyatka_hostname }};
+      server_name {{ pepyatka_lite_hostname }};
       include pepyatka-common.conf;
 
       location / {
