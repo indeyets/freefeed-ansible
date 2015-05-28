@@ -1,0 +1,16 @@
+[pepyatka]
+188.166.13.35
+
+[nginx]
+188.166.13.35
+
+[redis]
+188.166.13.35
+
+[all:vars]
+ansible_ssh_user=root
+pepyatka_hostname=188.166.13.35
+pepyatka_deploy_inventory=amadina
+pepyatka_server_host=api.amadina.pepyatka.com
+pepyatka_hostname=amadina.pepyatka.com
+pepyatka_node_env=production
