@@ -13,6 +13,7 @@
       with_items:
         - pepyatka-server-changelog
         - pepyatka-html-changelog
+        - pepyatka-lite-changelog
       when: slack_notification_url is defined
       tags:
         - changelog
@@ -48,15 +49,6 @@
       tags:
         - changelog
 
-    - name: Generate pepyatka-html changelog message for Slack
-      shell: echo "Updated pepyatka-html on {{ item | basename }}. <{{ pepyatka_html_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
-      with_fileglob:
-        - pepyatka-html-changelog/*
-      register: pepyatka_html_changelog
-      when: slack_notification_url is defined
-      tags:
-        - changelog
-
     - name: Notify Slack about pepyatka-server changes
       uri:
         method: POST
@@ -67,6 +59,15 @@
       when: slack_notification_url is defined and pepyatka_server_changelog.changed
       tags:
         - slack
+
+    - name: Generate pepyatka-html changelog message for Slack
+      shell: echo "Updated pepyatka-html on {{ item | basename }}. <{{ pepyatka_html_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
+      with_fileglob:
+        - pepyatka-html-changelog/*
+      register: pepyatka_html_changelog
+      when: slack_notification_url is defined
+      tags:
+        - changelog
 
     - name: Notify Slack about pepyatka-html changes
       uri:
@@ -79,6 +80,26 @@
       tags:
         - slack
 
+    - name: Generate pepyatka-lite changelog message for Slack
+      shell: echo "Updated pepyatka-lite on {{ item | basename }}. <{{ pepyatka_lite_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
+      with_fileglob:
+        - pepyatka-lite-changelog/*
+      register: pepyatka_lite_changelog
+      when: slack_notification_url is defined
+      tags:
+        - changelog
+
+    - name: Notify Slack about pepyatka-lite changes
+      uri:
+        method: POST
+        url: "{{ slack_notification_url }}"
+        HEADER_Content-Type: "application/x-www-form-urlencoded"
+        body: 'payload={"channel": "#deploy", "username": "ansible deploy", "text": "{{ item.stdout }}", "icon_emoji": ":ghost:"}'
+      with_items: pepyatka_lite_changelog.results
+      when: slack_notification_url is defined and pepyatka_lite_changelog.changed
+      tags:
+        - slack
+
     - name: Send a generic notification to Slack
       uri:
         method: POST
@@ -88,6 +109,7 @@
       when: slack_notification_url is defined
             and not pepyatka_server_changelog.changed
             and not pepyatka_html_changelog.changed
+            and not pepyatka_lite_changelog.changed
       tags:
         - slack
 

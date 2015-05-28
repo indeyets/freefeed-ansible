@@ -21,4 +21,8 @@ pepyatka_mailer_from_name: FreeFeed.net
 pepyatka_mailer_from_email: freefeed.net@gmail.com
 pepyatka_deploy_inventory: micropeppa
 vault_password_file: pepyatka.vault
+pepyatka_lite_enabled: true
+pepyatka_lite_repo: https://github.com/freefeed/freefeed-lite.git
+pepyatka_lite_branch: development
+pepyatka_lite_hostname: nanopeppa.freefeed.net
 
