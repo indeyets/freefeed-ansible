@@ -53,6 +53,15 @@
       tags:
         - bootstrap
 
+    - name: Clone pepyatka-lite
+      git:
+        repo: "{{ pepyatka_lite_repo }}"
+        dest: /root/pepyatka-lite
+        version: "{{ pepyatka_lite_branch }}"
+      when: pepyatka_lite_enabled
+      tags:
+        - bootstrap
+
     - name: Copy vault password file
       copy: src={{ vault_password_file }} dest=/root/pepyatka.vault
       when: vault_password_file is defined
