@@ -54,6 +54,13 @@ http {
       server_name    {{ pepyatka_hostname }};
       return         301 https://$server_name$request_uri;
     }
+{% if pepyatka_lite_enabled %}
+    server {
+      listen         80 {{ nginx_use_proxy_protocol | ternary('proxy_protocol', '') }};
+      server_name    {{ pepyatka_lite_hostname }};
+      return         301 https://$server_name$request_uri;
+    }
+{% endif %}
 {% endif %}
 
     server {
