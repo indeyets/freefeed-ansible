@@ -41,6 +41,8 @@ http {
 
     upstream app_pepyatka {
       ip_hash;
+      proxy_connect_timeout 5s;
+      proxy_next_upstream_timeout 6s;
 {% for port in pepyatka_server_instances %}
       server {{ pepyatka_server_host }}:{{ port }};
 {% endfor %}
@@ -58,13 +60,19 @@ http {
       server_name {{ pepyatka_hostname }};
       include pepyatka-common.conf;
 
-      location / {
+      location ~ ^/(css|js|img|fonts)/.*$ {
         root /var/www/pepyatka-html/public;
         access_log off;
         expires max;
         try_files $uri $uri/ /index.html?/$request_uri;
       }
 
+      location / {
+        root /var/www/pepyatka-html/public;
+        access_log off;
+        expires off;
+        try_files $uri $uri/ /index.html?/$request_uri;
+      }
     }
 {% if pepyatka_lite_enabled %}
     server {
@@ -76,7 +84,6 @@ http {
         rewrite ^/static/(.*)$ /$1 break;
         rewrite ^.* /index.htm break;
       }
-
    }
 {% endif %}
 }
