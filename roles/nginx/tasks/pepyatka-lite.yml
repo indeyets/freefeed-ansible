@@ -70,6 +70,15 @@
     - pepyatka
     - nginx
 
+- name: Update ga account in index.html
+  replace:
+    dest: /var/www/pepyatka-lite/index.htm
+    regexp: "UA.+'"
+    replace: "{{ pepyatka_ga_account }}'"
+  tags:
+    - pepyatka
+    - nginx
+
 - name: Sync standard images from pepyatka-html
   command: rsync -a --delete /var/www/pepyatka-html/public/img /var/www/pepyatka-lite
   tags:
